@@ -92,3 +92,35 @@ https://fastapi.tiangolo.com/tutorial/body/
 https://fastapi.tiangolo.com/tutorial/testing/
 https://fastapi.tiangolo.com/tutorial/body-fields/
 
+## Phase 2 frontend setup and run
+From the `frontend` folder:
+
+```sh
+npm install
+npm run dev -- --port 5173 --strictPort
+```
+
+Frontend runs at: http://localhost:5173
+
+Keep two terminals open — one for the backend at http://localhost:8080 and one for the frontend at http://localhost:5173.
+
+## GET and POST behavior
+**GET /api/ideas** — returns a list of all ideas stored in memory.
+
+**POST /api/ideas** — creates a new idea. Send a JSON body with a title and category. Returns the created idea with an id. Title cannot be empty or spaces only.
+
+## Frontend test and build commands
+From the `frontend` folder:
+
+Run validation tests:
+```sh
+node --test tests/validation.test.mjs
+```
+
+Build for production:
+```sh
+npm run build
+```
+
+## Temporary storage
+Ideas are stored in memory. Added ideas will disappear when the backend server is restarted. Only the two seed ideas will remain after a restart.
