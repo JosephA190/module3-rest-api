@@ -18,3 +18,10 @@ def test_valid_post_returns_created_idea(client):
     assert response.json()["id"] is not None
     assert response.json()["title"] == "Start a coding club"
     assert response.json()["category"] == "clubs"
+
+def test_spaces_only_title_returns_400(client):
+    count_before = len(client.get("/api/ideas").json())
+    response = client.post("/api/ideas", json={"title": "   ", "category": "clubs"})
+    assert response.status_code == 400
+    count_after = len(client.get("/api/ideas").json())
+    assert count_after == count_before
