@@ -124,3 +124,45 @@ npm run build
 
 ## Temporary storage
 Ideas are stored in memory. Added ideas will disappear when the backend server is restarted. Only the two seed ideas will remain after a restart.
+
+## Docker setup and run
+From the project root folder containing Dockerfile and compose.yaml:
+
+Build and start the API:
+```sh
+docker compose up -d --build
+```
+
+Check that the API is running:
+```sh
+docker compose ps
+```
+
+View logs:
+```sh
+docker compose logs api
+```
+
+Stop the API:
+```sh
+docker compose down
+```
+
+API runs at: http://localhost:8080
+
+## Run tests
+With your project environment activated, from the project root:
+```sh
+python -m pytest -v
+```
+
+## Docker questions
+
+**What is a Docker image?**
+A Docker image is a snapshot of everything needed to run an application, including the code, dependencies, and configuration. It is built from the Dockerfile and used to create containers.
+
+**What is a Docker container?**
+A Docker container is a running instance of a Docker image. It runs the application in an isolated environment separate from the rest of the computer.
+
+**Why did your POST data disappear after replacing the container?**
+Because the application stores ideas in memory. When the container is stopped and replaced, the application process restarts and all memory is cleared. Only the two seed ideas come back because they are hardcoded in the application.
