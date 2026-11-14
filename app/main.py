@@ -5,9 +5,9 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.models import Idea, IdeaRequest
 from app.store import IdeaStore
 
-def create_app() -> FastAPI:
+def create_app(db_path: str = None) -> FastAPI:
     app = FastAPI(title="Campus Idea Board")
-    store = IdeaStore()
+    store = IdeaStore(db_path=db_path)
 
     app.add_middleware(
         CORSMiddleware,
