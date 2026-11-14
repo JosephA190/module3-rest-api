@@ -122,8 +122,8 @@ Build for production:
 npm run build
 ```
 
-## Temporary storage
-Ideas are stored in memory. Added ideas will disappear when the backend server is restarted. Only the two seed ideas will remain after a restart.
+## Storage
+Ideas are saved in a SQLite database file. Added ideas will remain after the backend server is restarted.
 
 ## Docker setup and run
 From the project root folder containing Dockerfile and compose.yaml:
@@ -166,3 +166,17 @@ A Docker container is a running instance of a Docker image. It runs the applicat
 
 **Why did your POST data disappear after replacing the container?**
 Because the application stores ideas in memory. When the container is stopped and replaced, the application process restarts and all memory is cleared. Only the two seed ideas come back because they are hardcoded in the application.
+
+## SQLite database
+
+**Local database path:** `ideas.db` in the project root folder (created automatically on first run).
+
+**Docker database path:** `/app/data/ideas.db` inside the container, stored in the `ideas-data` Docker volume.
+
+**Ideas table columns:** `id` (integer, primary key), `title` (text, not blank), `category` (text, not blank).
+
+**Which code creates the table:** `IdeaStore._setup()` in `app/store.py` reads `app/schema.sql` and runs `CREATE TABLE IF NOT EXISTS` at startup.
+
+**Which YAML setting preserves the database file:** The `volumes` section in `compose.yaml` mounts the named volume `ideas-data` at `/app/data` inside the container. As long as you do not run `docker compose down -v`, that volume and the database file inside it are kept between container replacements.
+
+**Why data disappeared in Assignment 1 but survives now:** In Assignment 1 ideas were stored only in memory. When the container stopped, the process ended and all memory was lost. Now ideas are written to a SQLite file on the Docker volume. The volume lives outside the container, so stopping and replacing the container does not delete the file.
