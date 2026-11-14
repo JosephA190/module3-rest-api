@@ -1,11 +1,21 @@
 import pytest
+import tempfile
+import os
 from fastapi.testclient import TestClient
 from app.main import create_app
 
 @pytest.fixture
 def client():
-    with TestClient(create_app()) as test_client:
-        yield test_client
+    with tempfile.NamedTemporaryFile(suffix=".db", delete=False) as f:
+        db_path = f.name
+    try:
+        with TestClient(create_app(db_path=db_path)) as test_client:
+            yield test_client
+    finally:
+        try:
+            os.unlink(db_path)
+        except OSError:
+            pass
 
 def test_greeting_returns_json(client):
     response = client.get("/api/hello")
